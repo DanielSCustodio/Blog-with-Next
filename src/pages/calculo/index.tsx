@@ -1,13 +1,35 @@
-export default function Calculo () {
+import React from 'react';
+import dynamic from 'next/dynamic';
+//import { Modal } from '../../components/Modal';
 
-  async function handleSomar () {
+const Modal = dynamic(
+  ()=> import('../../components/Modal').then(mod => mod.Modal),
+  {
+    loading: () => <p>Carregando...</p>,
+    ssr:false,
+  }
+);
+export default function Calculo () {
+  const [ modalVisible, setModalVisible ] = React.useState( false );
+
+  async function handleSum () {
     const calc = ( await import( '../../libs/calc' ) ).default
-    alert( calc.sum( 5, 6 ) )
+    alert( calc.sum( 5, 6 ) );
+  }
+
+  function handleModalVisible () {
+    setModalVisible( true );
   }
   return (
     <div>
       <h1>Calculo</h1>
-      <button onClick={ handleSomar }>Somar</button>
+      <button onClick={ handleSum }>
+        Somar
+      </button>
+      <button onClick={ handleModalVisible }>
+        Modal
+      </button>
+      { modalVisible && <Modal /> }
     </div>
   )
 }
